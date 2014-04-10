@@ -1,5 +1,7 @@
 # BrickPi
 
+ruby wrappers for the BrickPi Lego Mindstorms C library
+
 TODO: Write a gem description
 
 ## Installation
