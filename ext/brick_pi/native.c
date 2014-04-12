@@ -41,7 +41,6 @@ VALUE bprb_BrickPiUpdateValues(VALUE self) {
 }
 
 void Init_native() {
-
     VALUE BrickPi = rb_define_module("BrickPi");
     VALUE Native = rb_define_module_under(BrickPi, "Native");
     rb_define_singleton_method(Native, "BrickPiSetup", bprb_BrickPiSetup, 0);
@@ -59,4 +58,8 @@ void Init_native() {
     rb_define_const(Native, "PORT_B", INT2FIX(1));
     rb_define_const(Native, "PORT_C", INT2FIX(2));
     rb_define_const(Native, "PORT_D", INT2FIX(3));
+    rb_define_const(Native, "PORT_1", INT2FIX(0));
+    rb_define_const(Native, "PORT_2", INT2FIX(1));
+    rb_define_const(Native, "PORT_3", INT2FIX(2));
+    rb_define_const(Native, "PORT_4", INT2FIX(3));
 }
