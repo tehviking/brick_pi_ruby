@@ -7,8 +7,10 @@ module BrickPi
 
     def initialize
       Native.BrickPiSetup()
-      @motor1 = Motor.new(Native::PORT_A)
-      @motor2 = Motor.new(Native::PORT_B)
+      @motor1 = ::BrickPi::Motor.new(Native::PORT_A)
+      @motor2 = ::BrickPi::Motor.new(Native::PORT_B)
+      @motor3 = ::BrickPi::Motor.new(Native::PORT_C)
+      @motor4 = ::BrickPi::Motor.new(Native::PORT_D)
       Native::Address[0] = 1
       Native::Address[1] = 2
     end
