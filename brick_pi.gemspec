@@ -4,12 +4,12 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'brick_pi/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "brick_pi"
+  spec.name          = "brick-pi"
   spec.version       = BrickPi::VERSION
-  spec.authors       = ["TODO: Write your name"]
-  spec.email         = ["TODO: Write your email address"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.authors       = ["Brandon Hays", "Charles Lowell"]
+  spec.email         = ["brandon.hays@gmail.com"]
+  spec.summary       = %q{Ruby library to run the BrickPi drivers for Lego Mindstorms}
+  spec.description   = %q{BrickPi uses a C library to communicate with Lego Mindstorms motors and sensors via GPIO on the Raspberry Pi. This library wraps the C and exposes a nicer, object-oriented interface via Ruby.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
