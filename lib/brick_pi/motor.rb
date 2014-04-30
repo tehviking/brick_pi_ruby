@@ -12,6 +12,12 @@ module BrickPi
       Native::MotorSpeed[@port] = motor_speed
     end
 
+    # Encoder reads the position of the motor in .5-degree increments,
+    # Divide by 2 to get degrees
+    def position
+      Native::Encoder[@port] / 2
+    end
+
     def stop
       spin 0
     end
