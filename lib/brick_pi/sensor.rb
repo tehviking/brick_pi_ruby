@@ -10,10 +10,18 @@ module BrickPi
       color_none: Native::TYPE_SENSOR_COLOR_NONE
     }
 
+    PORTS = {
+      port_1: Native::PORT_1,
+      port_2: Native::PORT_2,
+      port_3: Native::PORT_3,
+      port_4: Native::PORT_4
+    }
+
+    # So you can be all like `BrickPi::Sensor.new(:port_3, :ultrasonic)`
     def initialize(port, sensor_type)
       @port = port
       @sensor_type = sensor_type
-      Native::SensorType[@port] = SENSOR_TYPES[@sensor_type]
+      Native::SensorType[PORT_MAP[@port]] = SENSOR_TYPES[@sensor_type]
       Native::BrickPiSetupSensors()
     end
 

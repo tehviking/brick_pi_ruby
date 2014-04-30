@@ -3,7 +3,7 @@ include BrickPi
 
 module BrickPi
   class Bot
-    attr_accessor :motor1, :motor2
+    attr_accessor :motor1, :motor2, :motor3, :motor4
 
     def initialize
       Native.BrickPiSetup()
