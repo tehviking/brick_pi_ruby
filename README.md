@@ -2,14 +2,21 @@
 
 ruby wrappers for the BrickPi Lego Mindstorms C library
 
-TODO: Write a gem description
-TODO: Tag, version, and publish as gem
+## What you need:
+
+You need to have a few things to use this:
+
+ - The wonderful [BrickPi](http://www.dexterindustries.com/BrickPi.html) from Dexter Industries
+ - A Raspberry Pi (if you didn't get one with the BrickPi)
+ - Lego Mindstorms NXT 2.0 motors and/or sensors
 
 ## Installation
 
+**Note: This gem will currently only install on a Raspberry Pi set up with BrickPi software. It relies on the `WiringPi.h` C program to function and compile.
+
 Add this line to your application's Gemfile:
 
-    gem 'brick_pi'
+    gem 'brick-pi'
 
 And then execute:
 
@@ -17,7 +24,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install brick_pi
+    $ gem install brick-pi
 
 ## Usage
 
