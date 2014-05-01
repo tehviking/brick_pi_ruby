@@ -45,12 +45,14 @@ VALUE bprb_SensorType_set(VALUE self, VALUE key, VALUE value) {
 
 VALUE bprb_Sensor_get(VALUE self, VALUE key) {
     int index = FIX2INT(key);
-    return INT2FIX(BrickPi.Sensor[index]);
+    int result = BrickPi.Sensor[index];
+    return INT2FIX(result);
 }
 
 VALUE bprb_Encoder_get(VALUE self, VALUE key) {
     int index = FIX2INT(key);
-    return INT2FIX(BrickPi.Encoder[index]);
+    int result = BrickPi.Encoder[index];
+    return INT2FIX(result);
 }
 
 VALUE bprb_BrickPiSetTimeout(VALUE self) {

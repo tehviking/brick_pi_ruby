@@ -10,7 +10,7 @@ module BrickPi
       color_none: Native::TYPE_SENSOR_COLOR_NONE
     }
 
-    PORTS = {
+    PORT_MAP = {
       port_1: Native::PORT_1,
       port_2: Native::PORT_2,
       port_3: Native::PORT_3,
@@ -26,7 +26,7 @@ module BrickPi
     end
 
     def read
-      Native::Sensor[@port]
+      Native::Sensor[PORT_MAP[@port]]
     end
   end
 end
