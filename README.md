@@ -106,9 +106,9 @@ end
 You can read values from sensors by doing something like this:
 
 ```
-bot.sensor1.configure :port_1, :touch
+bot.sensor_1.configure :port_1, :touch
 bot.start
-bot.sensor1.read
+bot.sensor_1.read
 ```
 
 See the scripts in the `examples` directory for more details.
