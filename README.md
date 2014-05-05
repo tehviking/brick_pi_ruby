@@ -2,6 +2,12 @@
 
 ruby wrappers for the BrickPi Lego Mindstorms C library
 
+## Issues
+
+I use HuBoard to manage GitHub issues. It's pretty awesome, check it out here:
+
+https://huboard.com/tehviking/brick_pi_ruby/
+
 ## What you need:
 
 You need to have a few things to use this:
@@ -28,7 +34,9 @@ Or install it yourself as:
 
 ## Usage
 
-Currently, you only get a set of primitives to run motors. Expect more functionality around sensors and a more robust library supporting various configurations (e.g. 2-tracked vehicle).
+### Motors
+
+Currently, you only get a set of primitives to run motors. Expect a more robust library supporting various configurations (e.g. 2-tracked vehicle) later on.
 
 The Bot object starts and stops the robot. It contains 4 Motor objects, mapped to port A-D on your BrickPi.
 
@@ -98,6 +106,19 @@ loop do
   sleep(5 / 1000)
 end
 ```
+
+### Sensors
+
+You can read values from sensors by doing something like this:
+
+```
+bot.sensor1.configure :port_1, :touch
+bot.start
+bot.sensor1.read
+```
+
+See the scripts in the `examples` directory for more details.
+
 
 ## Contributing
 

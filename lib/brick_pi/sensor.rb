@@ -18,7 +18,12 @@ module BrickPi
     }
 
     # So you can be all like `BrickPi::Sensor.new(:port_3, :ultrasonic)`
-    def initialize(port, sensor_type)
+    def initialize(port = nil, sensor_type = nil)
+      configure(port, sensor_type) if port && sensor_type
+    end
+
+    # Set up a sensor with `bot.sensor1.configure :port_3, :ultrasonic`
+    def configure(port, sensor_type)
       @port = port
       @sensor_type = sensor_type
       Native::SensorType[PORT_MAP[@port]] = SENSOR_TYPES[@sensor_type]
@@ -26,7 +31,18 @@ module BrickPi
     end
 
     def read
-      Native::Sensor[PORT_MAP[@port]]
+      Native::Sensor[PORT_MAP[@port]] if @port
     end
+
+    # Nice friendly access methods for different sensors types
+
+    def touched?
+      @sensor_type == :touch && read == 1
+    end
+
+    def distance
+      read if @sensor_type == :ultrasonic
+    end
+
   end
 end
