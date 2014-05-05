@@ -4,7 +4,7 @@ require 'brick_pi'
 
 bot = BrickPi::Bot.new
 
-bot.sensor1 = BrickPi::Sensor.new(:port_1, :ultrasonic)
+bot.sensor1.configure :port_1, :ultrasonic
 
 bot.start
 

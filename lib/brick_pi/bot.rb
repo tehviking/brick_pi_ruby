@@ -11,10 +11,10 @@ module BrickPi
       @motor2 = ::BrickPi::Motor.new(Native::PORT_B)
       @motor3 = ::BrickPi::Motor.new(Native::PORT_C)
       @motor4 = ::BrickPi::Motor.new(Native::PORT_D)
-      @sensor1 = nil
-      @sensor2 = nil
-      @sensor3 = nil
-      @sensor4 = nil
+      @sensor1 = ::BrickPi::Sensor.new
+      @sensor2 = ::BrickPi::Sensor.new
+      @sensor3 = ::BrickPi::Sensor.new
+      @sensor4 = ::BrickPi::Sensor.new
       Native::Address[0] = 1
       Native::Address[1] = 2
     end
