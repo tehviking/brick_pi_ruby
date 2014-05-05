@@ -28,5 +28,16 @@ module BrickPi
     def read
       Native::Sensor[PORT_MAP[@port]]
     end
+
+    # Nice friendly access methods for different sensors types
+
+    def touched?
+      @sensor_type == :touch && read == 1
+    end
+
+    def distance
+      read if @sensor_type == :ultrasonic
+    end
+
   end
 end
