@@ -2,6 +2,12 @@
 
 ruby wrappers for the BrickPi Lego Mindstorms C library
 
+## Issues
+
+I use HuBoard to manage GitHub issues. It's pretty awesome, check it out here:
+
+https://huboard.com/tehviking/brick_pi_ruby/
+
 ## What you need:
 
 You need to have a few things to use this:
