@@ -112,7 +112,7 @@ end
 You can read values from sensors by doing something like this:
 
 ```
-bot.sensor1 = BrickPi::Sensor.new(:port_1, :touch)
+bot.sensor1.configure :port_1, :touch
 bot.start
 bot.sensor1.read
 ```
