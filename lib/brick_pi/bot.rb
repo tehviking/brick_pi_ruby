@@ -3,14 +3,15 @@ include BrickPi
 
 module BrickPi
   class Bot
-    attr_accessor :motor1, :motor2, :motor3, :motor4, :sensor1, :sensor2, :sensor3, :sensor4
+    attr_accessor :motor_A, :motor_B, :motor_C, :motor_D
+    attr_accessor :sensor1, :sensor2, :sensor3, :sensor4
 
     def initialize
       Native.BrickPiSetup()
-      @motor1 = ::BrickPi::Motor.new(Native::PORT_A)
-      @motor2 = ::BrickPi::Motor.new(Native::PORT_B)
-      @motor3 = ::BrickPi::Motor.new(Native::PORT_C)
-      @motor4 = ::BrickPi::Motor.new(Native::PORT_D)
+      @motor_A = ::BrickPi::Motor.new(Native::PORT_A)
+      @motor_B = ::BrickPi::Motor.new(Native::PORT_B)
+      @motor_C = ::BrickPi::Motor.new(Native::PORT_C)
+      @motor_D = ::BrickPi::Motor.new(Native::PORT_D)
       @sensor1 = ::BrickPi::Sensor.new
       @sensor2 = ::BrickPi::Sensor.new
       @sensor3 = ::BrickPi::Sensor.new

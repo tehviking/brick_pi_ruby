@@ -9,14 +9,14 @@ bot = BrickPi::Bot.new
 bot.start
 
 # Half speed on both motors. Max value is 100.
-bot.motor2.spin 50
-bot.motor3.spin 50
+bot.motor_B.spin 50
+bot.motor_C.spin 50
 
 sleep 5
 
 # Stop motors
-bot.motor2.stop
-bot.motor3.stop
+bot.motor_B.stop
+bot.motor_C.stop
 
 # Stop all functions for a bot
 bot.stop
