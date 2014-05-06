@@ -2,12 +2,12 @@
 
 require 'brick_pi'
 
-bot = BrickPi::Bot.new
-
-bot.sensor1.configure :port_1, :ultrasonic
+bot = BrickPi.create do |bot|
+  bot.ultrasonic_sensor :port_1
+end
 
 bot.start
 
 while true
-  puts bot.sensor1.distance
+  puts bot.sensor_1.distance
 end

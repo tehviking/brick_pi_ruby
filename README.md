@@ -45,17 +45,19 @@ Here's a quick & dirty script to spin a motor:
 ```ruby
 require 'brick_pi'
 
-# Instantiate the Bot
-bot = BrickPi::Bot.new
-
-# Set the speed for a motor, on a scale of 0 - 100
-bot.motor1.spin 50
+# Create a bot with a motor on port A
+bot = BrickPi.create do |bot|
+  bot.motor :port_A
+end
 
 # Get this party started
 bot.start
 
+# Set the speed for a motor, on a scale of 0 - 100
+bot.motor_A.spin 50
+
 # Stop a single motor
-bot.motor1.stop
+bot.motor_A.stop
 
 # Stop all functions for a bot
 bot.stop
@@ -72,7 +74,12 @@ require "highline/system_extensions"
 include HighLine::SystemExtensions
 HighLine::SystemExtensions.raw_no_echo_mode
 
-bot = BrickPi::Bot.new
+# Create a bot with two motors
+bot = BrickPi.create do |bot|
+  bot.motor :port_A
+  bot.motor :port_B
+end
+
 bot.start
 
 speed = 20
@@ -80,17 +87,17 @@ loop do
   char = HighLine::SystemExtensions.get_character
   case char.chr
   when 'w'
-    bot.motor1.spin speed
-    bot.motor2.spin speed
+    bot.motor_A.spin speed
+    bot.motor_B.spin speed
   when 'd'
-    bot.motor1.spin speed
-    bot.motor2.spin 0 - speed
+    bot.motor_A.spin speed
+    bot.motor_B.spin 0 - speed
   when 'a'
-    bot.motor1.spin 0 - speed
-    bot.motor2.spin speed
+    bot.motor_A.spin 0 - speed
+    bot.motor_B.spin speed
   when 'x'
-    bot.motor1.spin 0 - speed
-    bot.motor2.spin 0 - speed
+    bot.motor_A.spin 0 - speed
+    bot.motor_B.spin 0 - speed
   when 'o'
     if speed >=0 && speed <= 80
       speed += 20
@@ -100,8 +107,8 @@ loop do
       speed -= 20
     end
   when 'e', 'c', 'z', 'q'
-    bot.motor1.stop
-    bot.motor2.stop
+    bot.motor_A.stop
+    bot.motor_B.stop
   end
   sleep(5 / 1000)
 end
@@ -112,9 +119,11 @@ end
 You can read values from sensors by doing something like this:
 
 ```
-bot.sensor1.configure :port_1, :touch
+bot = BrickPi.create do |bot|
+  bot.touch_sensor :port_1
+end
 bot.start
-bot.sensor1.read
+bot.sensor_1.read
 ```
 
 See the scripts in the `examples` directory for more details.
