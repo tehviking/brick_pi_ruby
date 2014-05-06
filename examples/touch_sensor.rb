@@ -4,12 +4,12 @@ require 'brick_pi'
 
 bot = BrickPi::Bot.new
 
-bot.sensor1.configure :port_1, :touch
+bot.sensor_1.configure :port_1, :touch
 
 bot.start
 puts "waiting..."
 
-until bot.sensor1.touched?
+until bot.sensor_1.touched?
   # nothing - just wait for a touch
 end
 

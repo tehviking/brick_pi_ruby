@@ -49,13 +49,13 @@ require 'brick_pi'
 bot = BrickPi::Bot.new
 
 # Set the speed for a motor, on a scale of 0 - 100
-bot.motor1.spin 50
+bot.motor_A.spin 50
 
 # Get this party started
 bot.start
 
 # Stop a single motor
-bot.motor1.stop
+bot.motor_A.stop
 
 # Stop all functions for a bot
 bot.stop
@@ -80,17 +80,17 @@ loop do
   char = HighLine::SystemExtensions.get_character
   case char.chr
   when 'w'
-    bot.motor1.spin speed
-    bot.motor2.spin speed
+    bot.motor_A.spin speed
+    bot.motor_B.spin speed
   when 'd'
-    bot.motor1.spin speed
-    bot.motor2.spin 0 - speed
+    bot.motor_A.spin speed
+    bot.motor_B.spin 0 - speed
   when 'a'
-    bot.motor1.spin 0 - speed
-    bot.motor2.spin speed
+    bot.motor_A.spin 0 - speed
+    bot.motor_B.spin speed
   when 'x'
-    bot.motor1.spin 0 - speed
-    bot.motor2.spin 0 - speed
+    bot.motor_A.spin 0 - speed
+    bot.motor_B.spin 0 - speed
   when 'o'
     if speed >=0 && speed <= 80
       speed += 20
@@ -100,8 +100,8 @@ loop do
       speed -= 20
     end
   when 'e', 'c', 'z', 'q'
-    bot.motor1.stop
-    bot.motor2.stop
+    bot.motor_A.stop
+    bot.motor_B.stop
   end
   sleep(5 / 1000)
 end
@@ -112,9 +112,9 @@ end
 You can read values from sensors by doing something like this:
 
 ```
-bot.sensor1.configure :port_1, :touch
+bot.sensor_1.configure :port_1, :touch
 bot.start
-bot.sensor1.read
+bot.sensor_1.read
 ```
 
 See the scripts in the `examples` directory for more details.
