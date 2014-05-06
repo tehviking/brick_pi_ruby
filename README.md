@@ -42,17 +42,19 @@ require 'brick_pi'
 # Instantiate the Bot
 bot = BrickPi::Bot.new
 
-# Set the speed for a motor, on a scale of 0 - 100
-bot.motor_A.spin 50
-
 # Get this party started
-bot.start
+bot.run do
 
-# Stop a single motor
-bot.motor_A.stop
+  # Set the speed for a motor, on a scale of 0 - 100
+  bot.motor_A.spin 50
 
-# Stop all functions for a bot
-bot.stop
+  # Run the motor for 1 second
+  sleep 1
+
+  # Stop a single motor
+  bot.motor_A.stop
+
+end
 ```
 
 Once your bot is started, you can change the speed or direction of the motors at any time with the `Motor#spin` method.
@@ -67,37 +69,39 @@ include HighLine::SystemExtensions
 HighLine::SystemExtensions.raw_no_echo_mode
 
 bot = BrickPi::Bot.new
-bot.start
 
-speed = 20
-loop do
-  char = HighLine::SystemExtensions.get_character
-  case char.chr
-  when 'w'
-    bot.motor_A.spin speed
-    bot.motor_B.spin speed
-  when 'd'
-    bot.motor_A.spin speed
-    bot.motor_B.spin 0 - speed
-  when 'a'
-    bot.motor_A.spin 0 - speed
-    bot.motor_B.spin speed
-  when 'x'
-    bot.motor_A.spin 0 - speed
-    bot.motor_B.spin 0 - speed
-  when 'o'
-    if speed >=0 && speed <= 80
-      speed += 20
+bot.run do
+
+  speed = 20
+  loop do
+    char = HighLine::SystemExtensions.get_character
+    case char.chr
+    when 'w'
+      bot.motor_A.spin speed
+      bot.motor_B.spin speed
+    when 'd'
+      bot.motor_A.spin speed
+      bot.motor_B.spin 0 - speed
+    when 'a'
+      bot.motor_A.spin 0 - speed
+      bot.motor_B.spin speed
+    when 'x'
+      bot.motor_A.spin 0 - speed
+      bot.motor_B.spin 0 - speed
+    when 'o'
+      if speed >=0 && speed <= 80
+        speed += 20
+      end
+    when 'l'
+      if speed > 20 && speed <= 100
+        speed -= 20
+      end
+    when 'e', 'c', 'z', 'q'
+      bot.motor_A.stop
+      bot.motor_B.stop
     end
-  when 'l'
-    if speed > 20 && speed <= 100
-      speed -= 20
-    end
-  when 'e', 'c', 'z', 'q'
-    bot.motor_A.stop
-    bot.motor_B.stop
+    sleep(5 / 1000)
   end
-  sleep(5 / 1000)
 end
 ```
 
@@ -107,8 +111,9 @@ You can read values from sensors by doing something like this:
 
 ```
 bot.sensor_1.configure :port_1, :touch
-bot.start
-bot.sensor_1.read
+bot.run do
+  bot.sensor_1.read
+end
 ```
 
 See the scripts in the `examples` directory for more details.
