@@ -3,6 +3,9 @@ include BrickPi
 
 module BrickPi
   class Bot
+
+    include BrickPi::Configuration
+
     attr_accessor :motor_A, :motor_B, :motor_C, :motor_D
     attr_accessor :sensor_1, :sensor_2, :sensor_3, :sensor_4
 
