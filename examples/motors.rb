@@ -3,7 +3,10 @@
 require 'brick_pi'
 
 # Instantiate the Bot
-bot = BrickPi::Bot.new
+bot = BrickPi.create do |bot|
+  bot.motor :port_B
+  bot.motor :port_C
+end
 
 # Get this party started
 bot.run do

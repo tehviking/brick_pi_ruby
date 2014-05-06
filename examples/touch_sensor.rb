@@ -2,9 +2,9 @@
 
 require 'brick_pi'
 
-bot = BrickPi::Bot.new
-
-bot.sensor_1.configure :port_1, :touch
+bot = BrickPi.create do |bot|
+  bot.touch_sensor :port_1
+end
 
 bot.run do
   puts "waiting..."

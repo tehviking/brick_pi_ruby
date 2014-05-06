@@ -2,6 +2,12 @@
 
 ruby wrappers for the BrickPi Lego Mindstorms C library
 
+## Issues
+
+I use HuBoard to manage GitHub issues. It's pretty awesome, check it out here:
+
+https://huboard.com/tehviking/brick_pi_ruby/
+
 ## What you need:
 
 You need to have a few things to use this:
@@ -39,8 +45,10 @@ Here's a quick & dirty script to spin a motor:
 ```ruby
 require 'brick_pi'
 
-# Instantiate the Bot
-bot = BrickPi::Bot.new
+# Create a bot with a motor on port A
+bot = BrickPi.create do |bot|
+  bot.motor :port_A
+end
 
 # Get this party started
 bot.run do
@@ -68,7 +76,11 @@ require "highline/system_extensions"
 include HighLine::SystemExtensions
 HighLine::SystemExtensions.raw_no_echo_mode
 
-bot = BrickPi::Bot.new
+# Create a bot with two motors
+bot = BrickPi.create do |bot|
+  bot.motor :port_A
+  bot.motor :port_B
+end
 
 bot.run do
 
@@ -110,7 +122,9 @@ end
 You can read values from sensors by doing something like this:
 
 ```
-bot.sensor_1.configure :port_1, :touch
+bot = BrickPi.create do |bot|
+  bot.touch_sensor :port_1
+end
 bot.run do
   bot.sensor_1.read
 end
