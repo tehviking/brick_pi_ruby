@@ -6,8 +6,10 @@ bot = BrickPi.create do |bot|
   bot.ultrasonic_sensor :port_1
 end
 
-bot.start
+bot.run do
 
-while true
-  puts bot.sensor_1.distance
+  while true
+    puts bot.sensor_1.distance
+  end
+
 end

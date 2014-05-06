@@ -32,5 +32,12 @@ module BrickPi
     def stop
       @stop = true
     end
+
+    def run
+      start
+      yield
+      stop
+    end
+
   end
 end
