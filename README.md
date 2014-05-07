@@ -2,12 +2,6 @@
 
 ruby wrappers for the BrickPi Lego Mindstorms C library
 
-## Issues
-
-I use HuBoard to manage GitHub issues. It's pretty awesome, check it out here:
-
-https://huboard.com/tehviking/brick_pi_ruby/
-
 ## What you need:
 
 You need to have a few things to use this:
@@ -18,7 +12,10 @@ You need to have a few things to use this:
 
 ## Installation
 
-**Note: This gem will currently only install on a Raspberry Pi set up with BrickPi software. It relies on the `WiringPi.h` C program to function and compile.
+**Note: This gem will currently only install on a Raspberry Pi set up with BrickPi software.** It relies on the `WiringPi.h` C program to function and compile.
+
+You'll first need Ruby installed on your Raspberry Pi. If you need help, this Stack Overflow answer may be of service:
+http://raspberrypi.stackexchange.com/questions/1010/can-i-install-the-ruby-version-manager
 
 Add this line to your application's Gemfile:
 
@@ -140,3 +137,10 @@ See the scripts in the `examples` directory for more details.
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+## Issues
+
+I use HuBoard to manage GitHub issues. It's pretty awesome, check it out here:
+
+https://huboard.com/tehviking/brick_pi_ruby/
+
