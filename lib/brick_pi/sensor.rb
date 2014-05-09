@@ -17,6 +17,16 @@ module BrickPi
       port_4: Native::PORT_4
     }
 
+    COLORS = [
+      nil,
+      :black,
+      :blue,
+      :green,
+      :yellow,
+      :red,
+      :white
+    ]
+
     # So you can be all like `BrickPi::Sensor.new(:port_3, :ultrasonic)`
     def initialize(port, sensor_type)
       @port = port
@@ -37,6 +47,10 @@ module BrickPi
 
     def distance
       read if @sensor_type == :ultrasonic
+    end
+
+    def color
+      COLORS[read] if @sensor_type == :color
     end
 
   end
