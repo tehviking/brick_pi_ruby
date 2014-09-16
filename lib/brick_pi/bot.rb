@@ -13,6 +13,7 @@ module BrickPi
       Native.BrickPiSetup()
       Native::Address[0] = 1
       Native::Address[1] = 2
+      @queue = Queue.new
     end
 
     def start
@@ -20,24 +21,37 @@ module BrickPi
       Native.ClearTick()
       Native.Timeout = 50
       Native.BrickPiSetTimeout()
-
       Thread.new do
         until @stop do
           Native.BrickPiUpdateValues()
-          sleep(50/1000)
+          sleep 50/1000
         end
       end
-    end
-
-    def stop
-      @stop = true
-    end
-
-    def run
-      start
-      yield
+      Thread.new do
+        until @stop do
+          code = @queue.pop
+          begin
+            code.call
+          rescue => e
+            $stderr.puts e.message
+            $stderr.puts e.backtrace.join("\n")
+          end
+        end
+      end
+      Thread.new do
+        yield
+      end.join
       stop
     end
 
+    def stop
+      schedule do
+        @stop = true
+      end
+    end
+
+    def schedule(&block)
+      @queue.push block
+    end
   end
 end

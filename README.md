@@ -51,17 +51,17 @@ bot = BrickPi.create do |bot|
 end
 
 # Get this party started
-bot.run do
+bot.start do
+  schedule do
+    # Set the speed for a motor, on a scale of 0 - 100
+    bot.motor_A.spin 50
 
-  # Set the speed for a motor, on a scale of 0 - 100
-  bot.motor_A.spin 50
+    # Run the motor for 1 second
+    sleep 1
 
-  # Run the motor for 1 second
-  sleep 1
-
-  # Stop a single motor
-  bot.motor_A.stop
-
+    # Stop a single motor
+    bot.motor_A.stop
+  end
 end
 ```
 
@@ -72,6 +72,7 @@ Here's a really yucky script I hacked together to let you drive a 2-tracked vehi
 It requires the Highline gem, so on the BrickPi you'll need to run `gem install highline`.
 
 ```ruby
+require "brick_pi"
 require "highline/system_extensions"
 include HighLine::SystemExtensions
 HighLine::SystemExtensions.raw_no_echo_mode
@@ -80,39 +81,89 @@ HighLine::SystemExtensions.raw_no_echo_mode
 bot = BrickPi.create do |bot|
   bot.motor :port_A
   bot.motor :port_B
+  bot.ultrasonic_sensor :port_3
 end
 
-bot.run do
+bot.singleton_class.class_eval do
+  attr_accessor :speed
 
-  speed = 20
+  def move_forward
+    schedule do |op|
+      motor_A.spin speed
+      motor_B.spin speed
+    end
+  end
+
+  def move_backward
+    schedule do
+      motor_A.spin 0 - speed
+      motor_B.spin 0 - speed
+    end
+  end
+
+  def turn_left
+    schedule do
+      motor_A.spin speed
+      motor_B.spin 0 - speed
+    end
+  end
+
+  def turn_right
+    schedule do
+      motor_A.spin 0 - speed
+      motor_B.spin speed
+    end
+  end
+
+  def increase_speed
+    schedule do
+      if speed >=0 && speed <= 80
+        self.speed += 20
+      end
+    end
+  end
+
+  def decrease_speed
+    schedule do
+      if speed > 20 && speed <= 100
+        self.speed -= 20
+      end
+    end
+  end
+
+  def stop_motors
+    schedule do
+      motor_A.stop
+      motor_B.stop
+    end
+  end
+
+end
+
+bot.start do
+  bot.speed = 60
   loop do
+    unless bot.sensor_3.distance == 0
+      puts "*****SENSOR DISTANCE:*****"
+      puts bot.sensor_3.distance
+    end
     char = HighLine::SystemExtensions.get_character
     case char.chr
     when 'w'
-      bot.motor_A.spin speed
-      bot.motor_B.spin speed
+      bot.move_forward
     when 'd'
-      bot.motor_A.spin speed
-      bot.motor_B.spin 0 - speed
+      bot.turn_left
     when 'a'
-      bot.motor_A.spin 0 - speed
-      bot.motor_B.spin speed
+      bot.turn_right
     when 'x'
-      bot.motor_A.spin 0 - speed
-      bot.motor_B.spin 0 - speed
+      bot.move_backward
     when 'o'
-      if speed >=0 && speed <= 80
-        speed += 20
-      end
+      bot.increase_speed
     when 'l'
-      if speed > 20 && speed <= 100
-        speed -= 20
-      end
+      bot.decrease_speed
     when 'e', 'c', 'z', 'q'
-      bot.motor_A.stop
-      bot.motor_B.stop
+      bot.stop_motors
     end
-    sleep(5 / 1000)
   end
 end
 ```
