@@ -39,5 +39,8 @@ module BrickPi
       read if @sensor_type == :ultrasonic
     end
 
+    def zero
+    end
+
   end
 end

@@ -21,5 +21,7 @@ module BrickPi
     def stop
       spin 0
     end
+
+    alias_method :zero, :stop
   end
 end
