@@ -102,7 +102,10 @@ module BrickPi
       end
 
       def apply(bot)
-        bot.instance_exec(bot.send(@name), &@body)
+        value = bot.send(@name)
+        if !value.nil?
+          bot.instance_exec(value, &@body)
+        end
       end
     end
   end
