@@ -3,9 +3,6 @@ include BrickPi
 
 module BrickPi
   class Bot
-
-    include BrickPi::Configuration
-
     attr_accessor :motor_A, :motor_B, :motor_C, :motor_D
     attr_accessor :sensor_1, :sensor_2, :sensor_3, :sensor_4
 
@@ -13,6 +10,9 @@ module BrickPi
       Native.BrickPiSetup()
       Native::Address[0] = 1
       Native::Address[1] = 2
+      self.class.initializers.each do |initializer|
+        instance_eval &initializer
+      end
     end
 
     def start
@@ -42,11 +42,11 @@ module BrickPi
     end
 
     class << self
-      attr_reader :properties, :devices
+      attr_reader :properties, :devices, :initializers
 
       def property(name, &body)
-        @properties ||= {}
-        @properties[name] = Property.new(name, body)
+        @properties ||= []
+        @properties << Property.new(name, body)
         send(:attr_accessor, name)
       end
 
@@ -57,29 +57,38 @@ module BrickPi
         end
       end
 
+      def initializer(&body)
+        @initializers ||= []
+        @initializers << body
+      end
+
       def motor(port)
-        case port
-        when :port_A
-          @motor_A = device BrickPi::Motor.new(Native::PORT_A)
-        when :port_B
-          @motor_B = device BrickPi::Motor.new(Native::PORT_B)
-        when :port_C
-          @motor_C = device BrickPi::Motor.new(Native::PORT_C)
-        when :port_D
-          @motor_D = device BrickPi::Motor.new(Native::PORT_D)
+        initializer do
+          case port
+          when :port_A
+            @motor_A = self.class.device BrickPi::Motor.new(Native::PORT_A)
+          when :port_B
+            @motor_B = self.class.device BrickPi::Motor.new(Native::PORT_B)
+          when :port_C
+            @motor_C = self.class.device BrickPi::Motor.new(Native::PORT_C)
+          when :port_D
+            @motor_D = self.class.device BrickPi::Motor.new(Native::PORT_D)
+          end
         end
       end
 
       def sensor(port, sensor_type)
-        case port
-        when :port_1
-          @sensor_1 = device BrickPi::Sensor.new(:port_1, sensor_type)
-        when :port_2
-          @sensor_2 = device BrickPi::Sensor.new(:port_2, sensor_type)
-        when :port_3
-          @sensor_3 = device BrickPi::Sensor.new(:port_3, sensor_type)
-        when :port_4
-          @sensor_4 = device BrickPi::Sensor.new(:port_4, sensor_type)
+        initializer do
+          case port
+          when :port_1
+            @sensor_1 = self.class.device BrickPi::Sensor.new(:port_1, sensor_type)
+          when :port_2
+            @sensor_2 = self.class.device BrickPi::Sensor.new(:port_2, sensor_type)
+          when :port_3
+            @sensor_3 = self.class.device BrickPi::Sensor.new(:port_3, sensor_type)
+          when :port_4
+            @sensor_4 = self.class.device BrickPi::Sensor.new(:port_4, sensor_type)
+          end
         end
       end
 
