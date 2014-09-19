@@ -8,7 +8,6 @@ module BrickPi
     def spin(speed)
       speed = [-100, [100, speed].min].max
       motor_speed = (speed * 2.55).round
-      puts motor_speed
       Native::MotorSpeed[@port] = motor_speed
     end
 
