@@ -43,28 +43,29 @@ Here's a quick & dirty script to spin a motor:
 require 'brick_pi'
 
 # Create a bot with a motor on port A
-bot = BrickPi.create do |bot|
-  bot.motor :port_A
+class HelloBot < BrickPi::Bot
+  motor :port_A
+
+  # Declare a property to adjust speed at any time
+  property :motor_speed do |value|
+    # This `motor :port_A` to `@motor_A` mapping is yucky, sorry bout that
+    @motor_A.spin value
+  end
 end
 
 # Get this party started
-bot.start do
-  schedule do
-    # Set the speed for a motor, on a scale of 0 - 100
-    bot.motor_A.spin 50
-
-    # Run the motor for 1 second
-    sleep 1
-
-    # Stop a single motor
-    bot.motor_A.stop
-  end
-end
+bot = HelloBot.new
+bot.motor_speed = 80
+bot.start
+sleep 2
+bot.motor_speed - -80
+sleep 2
+bot.stop
 ```
 
-Once your bot is started, you can change the speed or direction of the motors at any time with the `Motor#spin` method.
+Once your bot is started, you can change the speed or direction of the motors at any time.
 
-Here's a really yucky script I hacked together to let you drive a 2-tracked vehicle with an iCade 8-Bitty (which is basically a bluetooth keyboard that looks like an NES controller).
+Here's a custom bot class and quick script to let you drive a 2-tracked vehicle with an iCade 8-Bitty (which is basically a bluetooth keyboard that looks like an NES controller).
 
 It requires the Highline gem, so on the BrickPi you'll need to run `gem install highline`.
 
@@ -75,92 +76,88 @@ include HighLine::SystemExtensions
 HighLine::SystemExtensions.raw_no_echo_mode
 
 # Create a bot with two motors
-bot = BrickPi.create do |bot|
-  bot.motor :port_A
-  bot.motor :port_B
-  bot.ultrasonic_sensor :port_3
-end
-
-bot.singleton_class.class_eval do
+class DemoBot < BrickPi::Bot
   attr_accessor :speed
+  motor :port_A
+  motor :port_B
+  ultrasonic_sensor :port_3
 
-  def move_forward
-    schedule do |op|
-      motor_A.spin speed
-      motor_B.spin speed
-    end
+  # A property is always settable and gettable, even while things are running.
+  property :forward_speed do |value|
+    @motor_A.spin value
+    @motor_B.spin value
   end
 
-  def move_backward
-    schedule do
-      motor_A.spin 0 - speed
-      motor_B.spin 0 - speed
-    end
+  # Properties are applied in order. Since it comes second, this trumps forward_speed.
+  property :rotation_speed do |value|
+    @motor_A.spin -1 * value
+    @motor_B.spin value
   end
 
   def turn_left
-    schedule do
-      motor_A.spin speed
-      motor_B.spin 0 - speed
-    end
+    self.rotation_speed = -1 * speed
   end
 
   def turn_right
-    schedule do
-      motor_A.spin 0 - speed
-      motor_B.spin speed
-    end
+    self.rotation_speed = speed
+  end
+
+  def move_forward
+    # Since rotation speed trumps forward speed, you need to EXTERMINATE it.
+    self.rotation_speed = nil
+    self.forward_speed = speed
+  end
+
+  def move_backward
+    self.rotation_speed = nil
+    self.forward_speed = -1 * speed
   end
 
   def increase_speed
-    schedule do
-      if speed >=0 && speed <= 80
-        self.speed += 20
-      end
+    if speed >=0 && speed <= 80
+      self.speed += 20
     end
   end
 
   def decrease_speed
-    schedule do
-      if speed > 20 && speed <= 100
-        self.speed -= 20
-      end
+    if speed > 20 && speed <= 100
+      self.speed -= 20
     end
   end
 
   def stop_motors
-    schedule do
-      motor_A.stop
-      motor_B.stop
-    end
+    self.rotation_speed = nil
+    self.forward_speed = 0
   end
 
 end
 
-bot.start do
-  bot.speed = 60
-  loop do
-    unless bot.sensor_3.distance == 0
-      puts "*****SENSOR DISTANCE:*****"
-      puts bot.sensor_3.distance
-    end
-    char = HighLine::SystemExtensions.get_character
-    case char.chr
-    when 'w'
-      bot.move_forward
-    when 'd'
-      bot.turn_left
-    when 'a'
-      bot.turn_right
-    when 'x'
-      bot.move_backward
-    when 'o'
-      bot.increase_speed
-    when 'l'
-      bot.decrease_speed
-    when 'e', 'c', 'z', 'q'
-      bot.stop_motors
-    end
+@bot = DemoBot.new
+@bot.start
+@bot.speed = 60
+puts "bot ready!"
+
+loop do
+  unless @bot.sensor_3.distance == 0
+    print "SENSOR DISTANCE: "
+    puts @bot.sensor_3.distance
+  end
+  char = HighLine::SystemExtensions.get_character
+  case char.chr
+  when 'w'
+    @bot.move_forward
+  when 'd'
+    @bot.turn_left
+  when 'a'
+    @bot.turn_right
+  when 'x'
+    @bot.move_backward
+  when 'o'
+    @bot.increase_speed
+  when 'l'
+    @bot.decrease_speed
+  when 'e', 'c', 'z', 'q'
+    @bot.stop_motors
   end
 end
 ```
@@ -170,12 +167,12 @@ end
 You can read values from sensors by doing something like this:
 
 ```
-bot = BrickPi.create do |bot|
-  bot.touch_sensor :port_1
+class SensorBot = BrickPi::Bot
+  touch_sensor :port_1
 end
-bot.run do
-  bot.sensor_1.read
-end
+
+bot = DemoBot.new
+bot.sensor_1.read
 ```
 
 See the scripts in the `examples` directory for more details.
@@ -194,4 +191,3 @@ See the scripts in the `examples` directory for more details.
 I use HuBoard to manage GitHub issues. It's pretty awesome, check it out here:
 
 https://huboard.com/tehviking/brick_pi_ruby/
-
