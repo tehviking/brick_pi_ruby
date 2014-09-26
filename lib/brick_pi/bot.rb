@@ -61,13 +61,15 @@ module BrickPi
     end
 
     def behavior(priority=1, &block)
-      Behavior.new(priority, block)
+      Behavior.new(priority, &block).tap do |behavior|
+        @behaviors << behavior
+      end
     end
 
     class Behavior
       attr_reader :priority
 
-      def initialize(priority, body)
+      def initialize(priority, &body)
         @priority, @body = priority, body
         @active = true
         @started_at = Time.now
@@ -78,7 +80,8 @@ module BrickPi
         stop = proc do
           @active = false
           if @then
-            next_behaviors << @then
+            behavior = @then.call
+            next_behaviors << behavior
           end
         end
         @body.call(Time.now - @started_at, stop)
@@ -88,8 +91,9 @@ module BrickPi
         @active
       end
 
-      def then(behavior)
-        @then = behavior
+      def then(&block)
+        @then = block
+        return self
       end
 
       # Higher priority items are run last, stomping on other behaviors
