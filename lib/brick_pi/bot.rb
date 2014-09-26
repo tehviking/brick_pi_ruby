@@ -13,6 +13,7 @@ module BrickPi
       self.class.initializers.each do |initializer|
         instance_eval &initializer
       end
+      @behaviors = []
     end
 
     def start
@@ -20,7 +21,7 @@ module BrickPi
       Native.ClearTick()
       Native.Timeout = 50
       Native.BrickPiSetTimeout()
-      Thread.new do
+      @thread = Thread.new do
         until @stop do
           tick()
           Native.BrickPiUpdateValues()
@@ -29,16 +30,76 @@ module BrickPi
       end
     end
 
+    def wait
+      @thread.join if @thread
+    end
+
     def tick
       self.class.devices.each { |d| d.zero }
+      next_behaviors = []
+      @behaviors.sort.each do |behavior|
+        behavior.apply(next_behaviors)
+        if behavior.active?
+          next_behaviors << behavior
+        end
+      end
+
+      @behaviors = next_behaviors
       self.class.properties.each { |p| p.apply self }
     rescue Exception => e
       $stderr.puts e.message
       $stderr.puts e.backtrace.join "\n"
     end
 
+    def add_behavior(*behaviors)
+      @behaviors.concat behaviors
+    end
+
     def stop
       @stop = true
+      @thread = nil
+    end
+
+    def behavior(priority=1, &block)
+      Behavior.new(priority, &block).tap do |behavior|
+        @behaviors << behavior
+      end
+    end
+
+    class Behavior
+      attr_reader :priority
+
+      def initialize(priority, &body)
+        @priority, @body = priority, body
+        @active = true
+        @started_at = Time.now
+        @then = nil
+      end
+
+      def apply(next_behaviors)
+        stop = proc do
+          @active = false
+          if @then
+            behavior = @then.call
+            next_behaviors << behavior
+          end
+        end
+        @body.call(Time.now - @started_at, stop)
+      end
+
+      def active?
+        @active
+      end
+
+      def then(&block)
+        @then = block
+        return self
+      end
+
+      # Higher priority items are run last, stomping on other behaviors
+      def <=>(other)
+        priority <=> other.priority
+      end
     end
 
     class << self
